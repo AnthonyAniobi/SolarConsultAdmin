@@ -1,4 +1,5 @@
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
+import 'package:admin/features/calendar/presentation/pages/calendar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -57,7 +58,15 @@ class HomeScreen extends StatelessWidget {
   }
 
   void questions(BuildContext context) {}
-  void calendarSchedule(BuildContext context) {}
+  void calendarSchedule(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CalendarScreen(),
+      ),
+    );
+  }
+
   void addBooking(BuildContext context) {}
 
   Future logout(BuildContext context) async {

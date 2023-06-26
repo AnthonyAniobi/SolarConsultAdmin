@@ -4,6 +4,9 @@ class Booking {
   // items
   final String _bookingid = 'booking_id';
   final String _startTime = 'start_time';
+  final String _firstName = 'first_name';
+  final String _lastName = 'last_name';
+  final String _email = 'email';
   final String _timezone = 'timezone';
   final String _minutes = 'minutes';
   final String _userId = 'user_id';
@@ -17,6 +20,7 @@ class Booking {
   late final String bookingId;
   late final String firstName;
   late final String lastName;
+  late final String email;
   late final DateTime startTime;
   late final Duration timezone;
   late final int minutes;
@@ -26,6 +30,9 @@ class Booking {
 
   Booking({
     required this.bookingId,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
     required this.startTime,
     required this.timezone,
     required this.minutes,
@@ -36,6 +43,9 @@ class Booking {
 
   Booking.fromMap(Map data) {
     bookingId = data[_bookingid];
+    firstName = data[_firstName];
+    lastName = data[_lastName];
+    email = data[_email];
     startTime = DateTime.fromMillisecondsSinceEpoch(data[_startTime]);
     timezone = Duration(milliseconds: data[_timezone]);
     minutes = data[_minutes];
@@ -46,6 +56,9 @@ class Booking {
 
   Map<String, dynamic> toMap() => {
         _bookingid: bookingId,
+        _firstName: firstName,
+        _lastName: lastName,
+        _email: email,
         _startTime: startTime.millisecondsSinceEpoch,
         _timezone: timezone.inMilliseconds,
         _minutes: minutes,

@@ -1,3 +1,7 @@
+import 'package:admin/core/data/datasources/booking_datasource.dart';
+import 'package:admin/core/data/repositories/booking_repository.dart';
+import 'package:admin/core/domain/repositories/booking_datasource.dart';
+import 'package:admin/core/domain/repositories/booking_repository.dart';
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/features/auth/data/datasources/auth_datasource.dart';
 import 'package:admin/features/auth/data/repositories/auth_repository.dart';
@@ -26,10 +30,16 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<AuthDatasource>(
             create: (context) => AuthDatasourceImpl(),
           ),
+          RepositoryProvider<BookingDatasource>(
+            create: (context) => BookingDatasourceImpl(),
+          ),
 
           // repositories
           RepositoryProvider<AuthRepository>(
             create: (context) => AuthRepositoryImpl(context.read()),
+          ),
+          RepositoryProvider<BookingRepository>(
+            create: (context) => BookingRepositoryImpl(context.read()),
           ),
         ],
         child: MultiBlocProvider(
@@ -44,7 +54,7 @@ class MyApp extends StatelessWidget {
               create: (context) => AuthBloc(context.read()),
             ),
             BlocProvider(
-              create: (context) => BookingsBloc(),
+              create: (context) => BookingsBloc(context.read()),
             ),
           ],
           child: MaterialApp(

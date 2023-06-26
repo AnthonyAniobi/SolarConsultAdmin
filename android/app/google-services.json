@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "63089949281",
+    "firebase_url": "https://solar-consult-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "solar-consult",
+    "storage_bucket": "solar-consult.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63089949281:android:1556247ca60c268cd6c820",
+        "android_client_info": {
+          "package_name": "com.aniobianthony.solarconsult"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63089949281-0tu53l9kuhln76astfqs6dapsfg78mqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPs9ANXiZ9RdBZgWMHxttZc4Me5so-brg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63089949281-0tu53l9kuhln76astfqs6dapsfg78mqm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63089949281:android:5f96ba0dfafa7c6cd6c820",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63089949281-0tu53l9kuhln76astfqs6dapsfg78mqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPs9ANXiZ9RdBZgWMHxttZc4Me5so-brg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63089949281-0tu53l9kuhln76astfqs6dapsfg78mqm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

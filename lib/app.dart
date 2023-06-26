@@ -1,10 +1,10 @@
+import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/features/auth/data/datasources/auth_datasource.dart';
 import 'package:admin/features/auth/data/repositories/auth_repository.dart';
 import 'package:admin/features/auth/domain/repositories/auth_datasource.dart';
 import 'package:admin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:admin/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
-import 'package:admin/features/bookings/presentation/bloc/bookings_bloc.dart';
 import 'package:admin/features/home/presentation/bloc/home_bloc.dart';
 import 'package:admin/features/home/presentation/pages/home_screen.dart';
 import 'package:admin/features/questions/presentation/bloc/questions_bloc.dart';

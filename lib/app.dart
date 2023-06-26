@@ -1,5 +1,7 @@
 import 'package:admin/features/auth/data/datasources/auth_datasource.dart';
 import 'package:admin/features/auth/data/repositories/auth_repository.dart';
+import 'package:admin/features/auth/domain/repositories/auth_datasource.dart';
+import 'package:admin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:admin/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
 import 'package:admin/features/bookings/presentation/bloc/bookings_bloc.dart';
@@ -21,12 +23,12 @@ class MyApp extends StatelessWidget {
       return MultiRepositoryProvider(
         providers: [
           //datasources
-          RepositoryProvider(
+          RepositoryProvider<AuthDatasource>(
             create: (context) => AuthDatasourceImpl(),
           ),
 
           // repositories
-          RepositoryProvider(
+          RepositoryProvider<AuthRepository>(
             create: (context) => AuthRepositoryImpl(context.read()),
           ),
         ],
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
             ),
             home: FirebaseAuth.instance.currentUser != null
                 ? const HomeScreen()
-                : LoginScreen(),
+                : const LoginScreen(),
           ),
         ),
       );

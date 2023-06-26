@@ -1,29 +1,33 @@
+// ignore_for_file: must_be_immutable
+
 part of 'auth_bloc.dart';
 
 abstract class AuthState extends Equatable {
-  final AuthInfo? info;
+  AuthInfo? info;
 
-  const AuthState([this.info]);
+  AuthState([this.info]);
 
   @override
   List<Object> get props => info == null ? [] : [info!];
 }
 
 class AuthInitial extends AuthState {
-  const AuthInitial(super.info);
+  AuthInitial() {
+    info = LoginCacheDatasource.getLoginCache();
+  }
 }
 
 class AuthLoading extends AuthState {
-  const AuthLoading(super.info);
+  AuthLoading(super.info);
 }
 
 class AuthError extends AuthState {
   final String errorMessage;
-  const AuthError(super.info, this.errorMessage);
+  AuthError(super.info, this.errorMessage);
   @override
   List<Object> get props => [errorMessage];
 }
 
 class AuthSuccess extends AuthState {
-  const AuthSuccess(super.info);
+  AuthSuccess(super.info);
 }

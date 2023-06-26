@@ -1,5 +1,5 @@
 class AppError {
-  final String? message;
+  final String message;
 
-  AppError([this.message]);
+  AppError(this.message);
 }

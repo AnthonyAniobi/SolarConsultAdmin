@@ -1,16 +1,20 @@
-# admin
+# Solar Consult Admin
 
-A new Flutter project.
+This Application contains the Admin dashboard for the control of the [solar consult application](https://play.google.com/store/apps/details?id=com.aniobianthony.solarconsult).
 
-## Getting Started
+## The application features:
+- [ ] serverside preview of questions and answers
+- [ ] control of booking and scheduling calendar
+- [ ] collecting all payments made in the application
+- [ ] scheduling calendar for consultations
 
-This project is a starting point for a Flutter application.
+## This admin application is hosted on 
+- [x] github - mobile Android version
+- [ ] firebase - mobile Android version
+- [ ] netlify - web version
+- [ ] firebase - web version
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Download solar consult from 
+- [Google Playstore](https://play.google.com/store/apps/details?id=com.aniobianthony.solarconsult)
+- [Amazon Appstore]()
+- [Huawei App Gallery]()

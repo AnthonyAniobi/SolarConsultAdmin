@@ -1,8 +1,9 @@
 import 'package:admin/features/auth/presentation/pages/signup_screen.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -11,19 +12,8 @@ class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future _login(BuildContext context) async {
-    FocusManager.instance.primaryFocus?.unfocus(); // remove keyboard
-
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) return;
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      //print failed
-      print(e);
-    }
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (formKey.currentState?.validate() ?? false) {}
   }
 
   LoginScreen({Key? key}) : super(key: key);
@@ -33,7 +23,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: Form(
           key: formKey,
           child: Column(
@@ -48,16 +38,28 @@ class LoginScreen extends StatelessWidget {
               TextFormField(
                 controller: emailController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(
+                  label: const Text("Email"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.w),
+                  ),
+                ),
                 validator: (email) =>
                     email != null && EmailValidator.validate(email)
                         ? null
                         : "enter a valid email",
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 4.h),
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(
+                  label: const Text("Password"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.w),
+                  ),
+                ),
                 validator: (password) =>
                     password != null && password.length <= 8
                         ? "password"
@@ -76,31 +78,31 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: RichText(
-                  text: TextSpan(
-                    text: "Dont have an account? ",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    children: [
-                      TextSpan(
-                        text: "Signup",
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignupScreen()));
-                          },
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Colors.green),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10),
+              //   child: RichText(
+              //     text: TextSpan(
+              //       text: "Dont have an account? ",
+              //       style: Theme.of(context).textTheme.bodyMedium,
+              //       children: [
+              //         TextSpan(
+              //           text: "Signup",
+              //           recognizer: TapGestureRecognizer()
+              //             ..onTap = () {
+              //               Navigator.pushReplacement(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                       builder: (context) => SignupScreen()));
+              //             },
+              //           style: Theme.of(context)
+              //               .textTheme
+              //               .bodyMedium!
+              //               .copyWith(color: Colors.green),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               const Spacer(
                 flex: 2,
               ),

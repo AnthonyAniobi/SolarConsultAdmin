@@ -1,5 +1,6 @@
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
+import 'package:admin/features/bookings/presentation/pages/bookings_screen.dart';
 import 'package:admin/features/calendar/presentation/pages/calendar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void addBooking(BuildContext context) {}
+  void addBooking(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const BookingsScreen(),
+      ),
+    );
+  }
 
   Future logout(BuildContext context) async {
     FirebaseAuth.instance.signOut().then((value) {

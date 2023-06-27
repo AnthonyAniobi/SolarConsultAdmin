@@ -15,10 +15,17 @@ class AvailableTime {
     to = DateTime.fromMillisecondsSinceEpoch(data[_to]);
   }
 
+  Map<String, dynamic> toMap(Map data) => {
+        _from: _toUtc(from).millisecondsSinceEpoch,
+        _to: _toUtc(to).millisecondsSinceEpoch,
+      };
+
   AvailableTime copy({DateTime? from, DateTime? to}) =>
       AvailableTime(from: from ?? this.from, to: to ?? this.to);
 
   String get id => DateFormat('yyyy:MM:dd:hh:MM').format(_toUtc(from));
+
+  String get dateId => DateFormat('yyyy:MM:dd').format(_toUtc(from));
 
   DateTime _toUtc(DateTime time) {
     final timeZone = DateTime.now().timeZoneOffset;

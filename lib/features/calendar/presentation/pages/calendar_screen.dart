@@ -1,3 +1,4 @@
+import 'package:admin/features/calendar/presentation/pages/edit_calendar_screen.dart';
 import 'package:admin/features/calendar/presentation/widgets/month_calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,13 @@ class CalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Calendar Shedule"),
+        title: const Text("Calendar Schedule"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          editNavigator(context);
+        },
+        child: const Icon(Icons.edit),
       ),
       body: ListView.builder(
           itemCount: 3,
@@ -17,6 +24,12 @@ class CalendarScreen extends StatelessWidget {
               index: index,
             );
           }),
+    );
+  }
+
+  void editNavigator(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const EditCalendarScreen()),
     );
   }
 }

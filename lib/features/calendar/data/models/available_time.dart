@@ -1,34 +1,21 @@
-import 'package:intl/intl.dart';
+import 'package:admin/core/extensions/datetime_extension.dart';
 
 class AvailableTime {
-  final String _from = "start_time";
-  final String _to = "end_time";
+  final String _date = "date_time";
+  final String _hours = "hours_available";
 
-  late final DateTime from;
-  late final DateTime to;
+  late final DateTime date;
+  late final List<int> hours;
 
-  AvailableTime({required this.from, required this.to})
-      : assert(from.isBefore(to));
+  AvailableTime({required this.date, required this.hours});
 
   AvailableTime.fromMap(Map data) {
-    from = DateTime.fromMillisecondsSinceEpoch(data[_from]);
-    to = DateTime.fromMillisecondsSinceEpoch(data[_to]);
+    date = DateTime.fromMillisecondsSinceEpoch(data[_date]).fromUtc;
+    hours = data[_hours];
   }
 
   Map<String, dynamic> toMap(Map data) => {
-        _from: _toUtc(from).millisecondsSinceEpoch,
-        _to: _toUtc(to).millisecondsSinceEpoch,
+        _date: date.toUtc().millisecondsSinceEpoch,
+        _hours: hours,
       };
-
-  AvailableTime copy({DateTime? from, DateTime? to}) =>
-      AvailableTime(from: from ?? this.from, to: to ?? this.to);
-
-  String get id => DateFormat('yyyy:MM:dd:hh:MM').format(_toUtc(from));
-
-  String get dateId => DateFormat('yyyy:MM:dd').format(_toUtc(from));
-
-  DateTime _toUtc(DateTime time) {
-    final timeZone = DateTime.now().timeZoneOffset;
-    return time.subtract(timeZone);
-  }
 }

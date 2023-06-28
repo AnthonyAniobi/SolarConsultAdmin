@@ -1,4 +1,8 @@
+import 'package:admin/core/extensions/datetime_extension.dart';
+import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
+import 'package:admin/features/calendar/presentation/pages/select_hours_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarCell extends StatelessWidget {
   const CalendarCell({
@@ -8,7 +12,11 @@ class CalendarCell extends StatelessWidget {
 
   final DateTime date;
 
-  bool get isAfter => date.isAfter(DateTime.now());
+  bool get isAfter => date.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 1),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -17,35 +25,35 @@ class CalendarCell extends StatelessWidget {
         selectDay(context);
       },
       child: Container(
-        color: Colors.green.withOpacity(isAfter ? 0.5 : 0),
+        color: Colors.green.withOpacity(isSelected(context) ? 0.7 : 0),
         alignment: Alignment.center,
         child: Text(
           "${date.day}",
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onBackground,
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context)
+                .colorScheme
+                .onBackground
+                .withOpacity(isAfter ? 1 : 0.2),
           ),
         ),
       ),
     );
   }
 
+  bool isSelected(BuildContext context) {
+    Set<String> dateSet = context.read<CalendarBloc>().state.dateSet;
+    return dateSet.contains(date.dayId);
+  }
+
   void selectDay(BuildContext context) {
-    if (!isAfter) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text(
-                  "Cant Select",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                content: Text(
-                  "Can't select this day because the day is already gone",
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ));
-    } else {
-      final now = DateTime.now().timeZoneOffset;
-      print(now);
+    if (isAfter) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SelectHoursScreen(date: date),
+        ),
+      );
     }
   }
 }

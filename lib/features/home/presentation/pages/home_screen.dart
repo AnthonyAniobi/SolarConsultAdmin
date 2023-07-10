@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         final booking = state.bookings[index];
                         return ListTile(
                           title: Text(DateFormat('yyyy/MMM/dd  hh:mm')
-                              .format(booking.startTime)),
+                              .format(booking.date)),
                           subtitle: Text(
                             booking.description,
                             maxLines: 2,

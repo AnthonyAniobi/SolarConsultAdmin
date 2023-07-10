@@ -1,5 +1,5 @@
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
-import 'package:admin/features/bookings/presentation/pages/add_bookings_screen.dart';
+import 'package:admin/features/bookings/presentation/pages/select_booking_day_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,12 +14,8 @@ class BookingsScreen extends StatelessWidget {
         title: const Text("Bookings"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AddBookingsScreen(),
-            ),
-          );
+        onPressed: () async {
+          await addBooking(context);
         },
         child: const Icon(Icons.add),
       ),
@@ -40,8 +36,8 @@ class BookingsScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final booking = state.bookings[index];
                   return ListTile(
-                    title: Text(DateFormat('yyyy/MMM/dd  hh:mm')
-                        .format(booking.startTime)),
+                    title: Text(
+                        DateFormat('yyyy/MMM/dd  hh:mm').format(booking.date)),
                     subtitle: Text(
                       booking.description,
                       maxLines: 2,
@@ -64,5 +60,17 @@ class BookingsScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> addBooking(BuildContext context) async {
+    final DateTime? daySelected = await Navigator.of(context).push<DateTime>(
+      MaterialPageRoute(
+        builder: (context) => const SelectBookingDayScreen(),
+      ),
+    );
+    if (daySelected == null) {
+      return;
+    }
+    // final TimePeriodRange =
   }
 }

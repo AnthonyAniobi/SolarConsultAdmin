@@ -1,8 +1,8 @@
 import 'package:admin/core/data/models/time_period.dart';
 
 class TimePeriodRange {
-  final _begin = "begin";
-  final _finish = "finish";
+  final _begin = "begin_time";
+  final _finish = "finish_time";
 
   late final TimePeriod begin;
   late final TimePeriod finish;

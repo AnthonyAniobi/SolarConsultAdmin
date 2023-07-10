@@ -1,15 +1,17 @@
 import 'dart:typed_data';
-
-import 'package:admin/core/data/models/booking.dart';
-import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:admin/core/data/models/time_period_range.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
 class AddBookingsScreen extends StatefulWidget {
-  const AddBookingsScreen({super.key});
+  const AddBookingsScreen({
+    super.key,
+    required this.date,
+    required this.timePeriod,
+  });
+  final DateTime date;
+  final TimePeriodRange timePeriod;
 
   @override
   State<AddBookingsScreen> createState() => _AddBookingsScreenState();
@@ -21,7 +23,7 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  DateTimeRange? dateTimeRange;
+  TimePeriodRange? timePeriod;
   final List<Uint8List> images = [];
 
   @override
@@ -53,24 +55,12 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
                 spacing: 2.w,
                 children: [
                   ElevatedButton(
-                      onPressed: () async {
-                        showTimePicker(
-                            context: context, initialTime: TimeOfDay.now());
-                        // dateTimeRange = await showDateRangePicker(
-                        //   context: context,
-                        //   firstDate: DateTime.now().add(
-                        //     const Duration(days: 1),
-                        //   ),
-                        //   lastDate: DateTime.now().add(
-                        //     const Duration(days: 5),
-                        //   ),
-                        // );
-                      },
-                      child: const Text("Add Start Time")),
+                      onPressed: () async {},
+                      child: const Text("Add Time Period")),
                   // ElevatedButton(
                   //     onPressed: () {}, child: const Text("Add Ending Time")),
-                  // ElevatedButton(
-                  //     onPressed: () {}, child: const Text("Add Images")),
+                  ElevatedButton(
+                      onPressed: () async {}, child: const Text("Add Images")),
                 ],
               ),
             ],
@@ -102,22 +92,22 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
 
   void submit(BuildContext context) {
     if (formKey.currentState?.validate() ?? false) {
-      if (dateTimeRange != null) {
+      if (timePeriod != null) {
         String uuid = const Uuid().v4();
 
-        Booking newBooking = Booking(
-          bookingId: uuid,
-          firstName: firstNameController.text,
-          lastName: lastNameController.text,
-          email: emailController.text,
-          startTime: dateTimeRange!.start,
-          timezone: DateTime.now().timeZoneOffset,
-          endTime: dateTimeRange!.end,
-          userId: FirebaseAuth.instance.currentUser!.uid,
-          description: descriptionController.text,
-          images: images,
-        );
-        context.read<BookingsBloc>().add(CreateNewBookingEvent(newBooking));
+        // Booking newBooking = Booking(
+        //   bookingId: uuid,
+        //   firstName: firstNameController.text,
+        //   lastName: lastNameController.text,
+        //   email: emailController.text,
+        //   timezone: DateTime.now().timeZoneOffset,
+        //   timeRange: timePeriod!,
+        //   endTime: dateTimeRange!.end,
+        //   userId: FirebaseAuth.instance.currentUser!.uid,
+        //   description: descriptionController.text,
+        //   images: images,
+        // );
+        // context.read<BookingsBloc>().add(CreateNewBookingEvent(newBooking));
       }
     }
   }

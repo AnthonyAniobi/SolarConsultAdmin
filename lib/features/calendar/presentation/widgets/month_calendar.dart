@@ -8,8 +8,10 @@ class MonthCalendar extends StatelessWidget {
   const MonthCalendar({
     super.key,
     required this.index,
+    required this.selectDate,
   });
   final int index;
+  final Function(DateTime) selectDate;
 
   DateTime get currentMonth =>
       DateUtils.addMonthsToMonthDate(DateTime.now(), index);
@@ -83,6 +85,7 @@ class MonthCalendar extends StatelessWidget {
                           currentMonth.month,
                           (index + 1 - firstWeekdayIndex),
                         ),
+                        selectDate: selectDate,
                       );
               }),
         ],

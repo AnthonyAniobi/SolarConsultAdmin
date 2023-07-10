@@ -1,6 +1,5 @@
 import 'package:admin/core/extensions/datetime_extension.dart';
 import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
-import 'package:admin/features/calendar/presentation/pages/select_hours_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,9 +7,11 @@ class CalendarCell extends StatelessWidget {
   const CalendarCell({
     super.key,
     required this.date,
+    required this.selectDate,
   });
 
   final DateTime date;
+  final Function(DateTime) selectDate;
 
   bool get isAfter => date.isAfter(
         DateTime.now().subtract(
@@ -47,13 +48,6 @@ class CalendarCell extends StatelessWidget {
   }
 
   void selectDay(BuildContext context) {
-    if (isAfter) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SelectHoursScreen(date: date),
-        ),
-      );
-    }
+    selectDate(date);
   }
 }

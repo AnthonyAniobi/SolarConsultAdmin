@@ -1,48 +1,24 @@
-import 'package:admin/core/extensions/datetime_extension.dart';
 import 'package:admin/features/calendar/data/models/available_time.dart';
 import 'package:admin/features/calendar/domain/entities/selection_hours.dart';
-import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
-class SelectHoursScreen extends StatefulWidget {
-  const SelectHoursScreen({super.key, required this.date});
-
-  final DateTime date;
+class GroupSelectHoursScreen extends StatefulWidget {
+  const GroupSelectHoursScreen({super.key});
 
   @override
-  State<SelectHoursScreen> createState() => _SelectHoursScreenState();
+  State<GroupSelectHoursScreen> createState() => _GroupSelectHoursScreenState();
 }
 
-class _SelectHoursScreenState extends State<SelectHoursScreen> {
+class _GroupSelectHoursScreenState extends State<GroupSelectHoursScreen> {
   List<SelectionHours> hours = [];
-  List<int> preSelectedHours = [];
   @override
   void initState() {
     super.initState();
     int numberOfHours = 24;
 
-    if (context
-        .read<CalendarBloc>()
-        .state
-        .dateSet
-        .contains(widget.date.dayId)) {
-      // if already selecte days here
-      AvailableTime avTime = context
-          .read<CalendarBloc>()
-          .state
-          .availableTimes
-          .firstWhere((element) => element.date.dayId == widget.date.dayId);
-      preSelectedHours = avTime.hours;
-    }
     hours = List<SelectionHours>.generate(
       numberOfHours,
-      (index) {
-        int hourIndex = index;
-        bool isSelected = preSelectedHours.contains(hourIndex);
-        return SelectionHours(hourIndex, isSelected);
-      },
+      (index) => SelectionHours(index, false),
     );
   }
 
@@ -50,8 +26,8 @@ class _SelectHoursScreenState extends State<SelectHoursScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          DateFormat('dd MMMM, yyyy').format(widget.date),
+        title: const Text(
+          "Group Time",
         ),
         actions: [
           IconButton(
@@ -97,19 +73,14 @@ class _SelectHoursScreenState extends State<SelectHoursScreen> {
   }
 
   void saveSchedule() {
-    if (hours.isEmpty) {
-      deleteSchedule();
-    } else {
-      AvailableTime time = AvailableTime(
-        date: widget.date,
-        hours: hours
-            .where((element) => element.selected)
-            .map<int>((SelectionHours sHours) => sHours.index)
-            .toList(),
-      );
-      context.read<CalendarBloc>().add(AddAvailableTimeEvent(time));
-      Navigator.pop(context);
-    }
+    AvailableTime time = AvailableTime(
+      date: DateTime.now(),
+      hours: hours
+          .where((element) => element.selected)
+          .map<int>((SelectionHours sHours) => sHours.index)
+          .toList(),
+    );
+    Navigator.pop(context, time);
   }
 
   void deleteSchedule() {
@@ -118,8 +89,5 @@ class _SelectHoursScreenState extends State<SelectHoursScreen> {
       hours[i].selected = false;
     }
     setState(() {});
-    context.read<CalendarBloc>().add(
-          RemoveAvailableTimeEvent(widget.date),
-        );
   }
 }

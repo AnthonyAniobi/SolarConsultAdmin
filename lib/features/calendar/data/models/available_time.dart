@@ -11,11 +11,11 @@ class AvailableTime {
 
   AvailableTime.fromMap(Map data) {
     date = DateTime.fromMillisecondsSinceEpoch(data[_date]).fromUtc;
-    hours = data[_hours];
+    hours = data[_hours].map<int>((h) => h as int).toList();
   }
 
-  Map<String, dynamic> toMap(Map data) => {
-        _date: date.toUtc().millisecondsSinceEpoch,
+  Map<String, dynamic> toMap() => {
+        _date: date.millisecondsSinceEpoch,
         _hours: hours,
       };
 }

@@ -9,6 +9,10 @@ import 'package:admin/features/auth/domain/repositories/auth_datasource.dart';
 import 'package:admin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:admin/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
+import 'package:admin/features/calendar/data/datasources/calendar_datasource.dart';
+import 'package:admin/features/calendar/data/repositories/calendar_repository.dart';
+import 'package:admin/features/calendar/domain/repositories/calendar_datasource.dart';
+import 'package:admin/features/calendar/domain/repositories/calendar_repository.dart';
 import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:admin/features/home/presentation/bloc/home_bloc.dart';
 import 'package:admin/features/home/presentation/pages/home_screen.dart';
@@ -34,6 +38,9 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<BookingDatasource>(
             create: (context) => BookingDatasourceImpl(),
           ),
+          RepositoryProvider<CalendarDatasource>(
+            create: (context) => CalendarDatasourceImpl(),
+          ),
 
           // repositories
           RepositoryProvider<AuthRepository>(
@@ -41,6 +48,9 @@ class MyApp extends StatelessWidget {
           ),
           RepositoryProvider<BookingRepository>(
             create: (context) => BookingRepositoryImpl(context.read()),
+          ),
+          RepositoryProvider<CalendarRepository>(
+            create: (context) => CalendarRepositoryImpl(context.read()),
           ),
         ],
         child: MultiBlocProvider(
@@ -58,7 +68,7 @@ class MyApp extends StatelessWidget {
               create: (context) => BookingsBloc(context.read()),
             ),
             BlocProvider(
-              create: (context) => CalendarBloc(),
+              create: (context) => CalendarBloc(context.read()),
             ),
           ],
           child: MaterialApp(

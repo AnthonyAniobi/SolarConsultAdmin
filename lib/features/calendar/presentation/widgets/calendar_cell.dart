@@ -13,12 +13,6 @@ class CalendarCell extends StatelessWidget {
   final DateTime date;
   final Function(DateTime) selectDate;
 
-  bool get isAfter => date.isAfter(
-        DateTime.now().subtract(
-          const Duration(days: 1),
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -35,7 +29,7 @@ class CalendarCell extends StatelessWidget {
             color: Theme.of(context)
                 .colorScheme
                 .onBackground
-                .withOpacity(isAfter ? 1 : 0.2),
+                .withOpacity(date.dayIsNotPast ? 1 : 0.2),
           ),
         ),
       ),

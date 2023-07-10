@@ -33,14 +33,14 @@ class _GroupSelectHoursScreenState extends State<GroupSelectHoursScreen> {
           IconButton(
             onPressed: saveSchedule,
             icon: const Icon(
-              Icons.save,
+              Icons.done,
               color: Colors.green,
             ),
           ),
           IconButton(
               onPressed: deleteSchedule,
               icon: const Icon(
-                Icons.delete,
+                Icons.close,
                 color: Colors.red,
               )),
         ],

@@ -33,6 +33,15 @@ class _GroupDatePickerScreenState extends State<GroupDatePickerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select Days"),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.close,
+              color: Colors.red,
+            )),
         actions: [
           IconButton(
               onPressed: () {
@@ -137,9 +146,9 @@ class _MonthCalendar extends StatelessWidget {
                         child: Text(
                           e.name.toUpperCase(),
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -177,7 +186,9 @@ class _MonthCalendar extends StatelessWidget {
   Widget _calendarCell(BuildContext context, DateTime dateTime, bool selected) {
     return GestureDetector(
       onTap: () {
-        selectDate(dateTime);
+        if (dateTime.dayIsNotPast) {
+          selectDate(dateTime);
+        }
       },
       child: Container(
         color:
@@ -187,8 +198,10 @@ class _MonthCalendar extends StatelessWidget {
           "${dateTime.day}",
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onBackground,
-            // .withOpacity(isAfter ? 1 : 0.2),
+            color: Theme.of(context)
+                .colorScheme
+                .onBackground
+                .withOpacity(dateTime.dayIsNotPast ? 1 : 0.2),
           ),
         ),
       ),

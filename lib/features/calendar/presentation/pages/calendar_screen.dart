@@ -18,7 +18,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<CalendarBloc>().add(GetAvailableTimeEvent());
+    if (context.read<CalendarBloc>().state is CalendarInitial) {
+      context.read<CalendarBloc>().add(GetAvailableTimeEvent());
+    }
   }
 
   @override
@@ -60,11 +62,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                 ],
               ),
-              TextButton(
-                onPressed: () {
-                  selectSheduleGroup();
-                },
-                child: const Text("Select Schedule group"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      selectSheduleGroup();
+                    },
+                    child: const Text("Select Schedule group"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.read<CalendarBloc>().add(GetAvailableTimeEvent());
+                    },
+                    child: const Text("Reload"),
+                  ),
+                ],
               ),
               Expanded(
                 child: ListView.builder(

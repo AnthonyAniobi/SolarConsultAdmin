@@ -34,9 +34,9 @@ class MonthCalendar extends StatelessWidget {
           color: Theme.of(context).colorScheme.onPrimary,
           boxShadow: [
             BoxShadow(
-              offset: const Offset(3, 2),
-              blurRadius: 7,
-              color: Colors.black.withOpacity(0.35),
+              offset: const Offset(1, 2),
+              blurRadius: 3,
+              color: Colors.black.withOpacity(0.2),
             ),
           ]),
       child: Column(
@@ -57,8 +57,8 @@ class MonthCalendar extends StatelessWidget {
                         child: Text(
                           e.name.toUpperCase(),
                           style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 15.sp,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -25,13 +25,20 @@ class SelectBookingDayScreen extends StatelessWidget {
               color: Colors.red,
             )),
       ),
-      body: ListView.builder(
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return _MonthCalendar(
-              index: index,
-            );
-          }),
+      body: BlocBuilder<CalendarBloc, CalendarState>(
+        builder: (context, state) {
+          if (state is CalendarLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return _MonthCalendar(
+                  index: index,
+                );
+              });
+        },
+      ),
     );
   }
 }

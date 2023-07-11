@@ -1,5 +1,12 @@
+import 'package:admin/core/data/models/booking.dart';
+import 'package:admin/core/data/models/time_period_range.dart';
+import 'package:admin/core/extensions/datetime_extension.dart';
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
+import 'package:admin/features/bookings/presentation/pages/add_bookings_screen.dart';
 import 'package:admin/features/bookings/presentation/pages/select_booking_day_screen.dart';
+import 'package:admin/features/bookings/presentation/pages/select_booking_hour_screen.dart';
+import 'package:admin/features/calendar/data/models/available_time.dart';
+import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -63,6 +70,9 @@ class BookingsScreen extends StatelessWidget {
   }
 
   Future<void> addBooking(BuildContext context) async {
+    if (context.read<CalendarBloc>().state is CalendarInitial) {
+      context.read<CalendarBloc>().add(GetAvailableTimeEvent());
+    }
     final DateTime? daySelected = await Navigator.of(context).push<DateTime>(
       MaterialPageRoute(
         builder: (context) => const SelectBookingDayScreen(),
@@ -71,6 +81,46 @@ class BookingsScreen extends StatelessWidget {
     if (daySelected == null) {
       return;
     }
-    // final TimePeriodRange =
+
+    // ignore: use_build_context_synchronously
+    final AvailableTime availableTime = context
+        .read<CalendarBloc>()
+        .state
+        .availableTimes
+        .firstWhere((avTime) => avTime.date.dayId == daySelected.dayId);
+
+    // ignore: use_build_context_synchronously
+    final List<Booking> bookings = context
+        .read<BookingsBloc>()
+        .state
+        .bookings
+        .where((bk) => bk.date.dayId == daySelected.dayId)
+        .toList();
+
+    final TimePeriodRange? timePeriodRange =
+        // ignore: use_build_context_synchronously
+        await Navigator.push<TimePeriodRange>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SelectBookingHourScreen(
+          availableTime: availableTime,
+          bookingRange: bookings,
+        ),
+      ),
+    );
+
+    if (timePeriodRange == null) {
+      return;
+    }
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddBookingsScreen(
+          date: daySelected,
+          timePeriod: timePeriodRange,
+        ),
+      ),
+    );
   }
 }

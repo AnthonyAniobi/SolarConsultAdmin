@@ -1,4 +1,6 @@
-class TimePeriod {
+import 'package:equatable/equatable.dart';
+
+class TimePeriod extends Equatable {
   final _hourKey = "hour";
   final _minuteKey = "minute";
 
@@ -44,4 +46,12 @@ class TimePeriod {
         _hourKey: hour,
         _minuteKey: minute,
       };
+
+  @override
+  List<Object?> get props => [hour, minute];
+
+  @override
+  String toString() {
+    return "${"$hour".padLeft(2, '0')}:${"$minute".padLeft(2, '0')}";
+  }
 }

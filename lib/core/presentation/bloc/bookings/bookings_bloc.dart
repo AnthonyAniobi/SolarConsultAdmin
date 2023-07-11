@@ -13,7 +13,7 @@ part 'bookings_state.dart';
 
 class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
   final BookingRepository repo;
-  BookingsBloc(this.repo) : super(BookingsInitial()) {
+  BookingsBloc(this.repo) : super(const BookingsInitial([])) {
     on<CreateNewBookingEvent>(_createBooking);
     on<GetAllBookingEvent>(_getAllBooking);
     on<DeleteBookingEvent>(_deleteBooking);
@@ -22,11 +22,11 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
 
   void _getAllBooking(
       GetAllBookingEvent event, Emitter<BookingsState> emit) async {
-    emit(BookingsLoading());
+    emit(BookingsLoading(state.bookings));
     final result = await GetAllBookingUsecase(repo).call();
     result.fold(
       (left) => emit(
-        BookingsError(left.message),
+        BookingsError(left.message, state.bookings),
       ),
       (right) => emit(
         BookingsSuccess(right),
@@ -36,55 +36,45 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
 
   void _createBooking(
       CreateNewBookingEvent event, Emitter<BookingsState> emit) async {
-    if (state is BookingsSuccess) {
-      final state = this.state as BookingsSuccess;
-      final bookings = state.bookings;
-      emit(BookingsLoading());
-      final result = await CreateBookingUsecase(repo, event.booking).call();
-      result.fold(
-        (left) => emit(
-          BookingsError(left.message),
-        ),
-        (right) => emit(
-          BookingsSuccess(bookings),
-        ),
-      );
-    }
+    emit(BookingsLoading(state.bookings));
+    final result = await CreateBookingUsecase(repo, event.booking).call();
+    result.fold(
+      (left) => emit(
+        BookingsError(left.message, state.bookings),
+      ),
+      (right) => emit(
+        BookingsSuccess(state.bookings..add(event.booking)),
+      ),
+    );
   }
 
   void _deleteBooking(
       DeleteBookingEvent event, Emitter<BookingsState> emit) async {
-    if (state is BookingsSuccess) {
-      final state = this.state as BookingsSuccess;
-      final bookings = state.bookings;
-      emit(BookingsLoading());
-      final result = await DeleteBookingUsecase(repo, event.booking).call();
-      result.fold(
-        (left) => emit(
-          BookingsError(left.message),
-        ),
-        (right) => emit(
-          BookingsSuccess(bookings),
-        ),
-      );
-    }
+    emit(BookingsLoading(state.bookings));
+    final result = await DeleteBookingUsecase(repo, event.booking).call();
+    result.fold(
+      (left) => emit(
+        BookingsError(left.message, state.bookings),
+      ),
+      (right) => emit(
+        BookingsSuccess(state.bookings
+            .where((bk) => bk.bookingId != event.booking.bookingId)
+            .toList()),
+      ),
+    );
   }
 
   void _updateBooking(
       UpdateBookingEvent event, Emitter<BookingsState> emit) async {
-    if (state is BookingsSuccess) {
-      final state = this.state as BookingsSuccess;
-      final bookings = state.bookings;
-      emit(BookingsLoading());
-      final result = await UpdateBookingUsecase(repo, event.booking).call();
-      result.fold(
-        (left) => emit(
-          BookingsError(left.message),
-        ),
-        (right) => emit(
-          BookingsSuccess(bookings),
-        ),
-      );
-    }
+    emit(BookingsLoading(state.bookings));
+    final result = await UpdateBookingUsecase(repo, event.booking).call();
+    result.fold(
+      (left) => emit(
+        BookingsError(left.message, state.bookings),
+      ),
+      (right) => emit(
+        BookingsSuccess(state.bookings),
+      ),
+    );
   }
 }

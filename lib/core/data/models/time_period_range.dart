@@ -1,6 +1,7 @@
 import 'package:admin/core/data/models/time_period.dart';
+import 'package:equatable/equatable.dart';
 
-class TimePeriodRange {
+class TimePeriodRange extends Equatable {
   final _begin = "begin_time";
   final _finish = "finish_time";
 
@@ -21,4 +22,21 @@ class TimePeriodRange {
         _begin: begin.toMap(),
         _finish: finish.toMap(),
       };
+
+  @override
+  List<Object?> get props => [begin, finish];
+
+  @override
+  String toString() {
+    return "${begin.toString()} -> ${finish.toString()}";
+  }
+
+  static List<TimePeriodRange> all(int hour) => [
+        TimePeriodRange(
+            begin: TimePeriod(hour: hour, minute: 0),
+            finish: TimePeriod(hour: hour, minute: 20)),
+        TimePeriodRange(
+            begin: TimePeriod(hour: hour, minute: 30),
+            finish: TimePeriod(hour: hour, minute: 50)),
+      ];
 }

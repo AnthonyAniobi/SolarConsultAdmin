@@ -39,7 +39,14 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Booking"),
+        leading: TextButton(
+          child: const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+          onPressed: () {},
+        ),
+        title: const Text("Booking Information"),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),

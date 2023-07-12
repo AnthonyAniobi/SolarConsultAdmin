@@ -23,11 +23,12 @@ class DeleteBookingEvent extends BookingsEvent {
 /// create a new booking
 class CreateNewBookingEvent extends BookingsEvent {
   final Booking booking;
+  final List<Uint8List> images;
 
-  const CreateNewBookingEvent(this.booking);
+  const CreateNewBookingEvent(this.booking, this.images);
 
   @override
-  List<Object> get props => [booking];
+  List<Object> get props => [booking, images];
 }
 
 /// update booking

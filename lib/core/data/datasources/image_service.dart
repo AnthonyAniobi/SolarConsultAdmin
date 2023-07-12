@@ -18,21 +18,6 @@ class ImageService {
     return bytes;
   }
 
-  /// convert bytes to image widget
-  Widget byteToImageWidget(Uint8List bytes,
-      [double? width, double? height, BoxFit? fit]) {
-    return Image.memory(
-      bytes,
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder:
-          (BuildContext context, Object exception, StackTrace? stackTrace) {
-        return const Text("Error Loading Image");
-      },
-    );
-  }
-
   static Future<Uint8List?> pickImage(BuildContext context) async {
     Uint8List? result;
     await showModalBottomSheet(

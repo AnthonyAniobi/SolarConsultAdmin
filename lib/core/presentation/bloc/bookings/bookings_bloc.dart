@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:admin/core/data/models/booking.dart';
 import 'package:admin/core/domain/repositories/booking_repository.dart';
 import 'package:admin/core/domain/usecases/create_booking_usecase.dart';
@@ -37,7 +39,11 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
   void _createBooking(
       CreateNewBookingEvent event, Emitter<BookingsState> emit) async {
     emit(BookingsLoading(state.bookings));
-    final result = await CreateBookingUsecase(repo, event.booking).call();
+    final result = await CreateBookingUsecase(
+      repo,
+      event.booking,
+      event.images,
+    ).call();
     result.fold(
       (left) => emit(
         BookingsError(left.message, state.bookings),
@@ -73,7 +79,18 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
         BookingsError(left.message, state.bookings),
       ),
       (right) => emit(
-        BookingsSuccess(state.bookings),
+        BookingsSuccess(
+          state.bookings
+            ..map(
+              (bk) {
+                if (bk.bookingId == event.booking.bookingId) {
+                  return event.booking;
+                } else {
+                  return bk;
+                }
+              },
+            ),
+        ),
       ),
     );
   }

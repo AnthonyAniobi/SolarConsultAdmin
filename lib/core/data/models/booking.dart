@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:admin/core/data/models/time_period_range.dart';
 
 class Booking {
@@ -29,7 +27,7 @@ class Booking {
 
   late final String userId;
   late final String description;
-  late final List<Uint8List> images;
+  late final List<String> images;
 
   Booking({
     required this.bookingId,
@@ -54,7 +52,7 @@ class Booking {
     timeRange = TimePeriodRange.fromMap(data[_timeRangeName]);
     userId = data[_userId];
     description = data[_description];
-    images = data[_images].map((List<int> uList) => Uint8List.fromList(uList));
+    images = List<String>.from(data[_images]);
   }
 
   Map<String, dynamic> toMap() => {
@@ -67,6 +65,30 @@ class Booking {
         _timeRangeName: timeRange.toMap(),
         _userId: userId,
         _description: description,
-        _images: images.map((e) => e.toList()).toList(),
+        _images: images,
       };
+
+  Booking copy({
+    String? bookingId,
+    String? firstName,
+    String? lastName,
+    String? email,
+    DateTime? date,
+    TimePeriodRange? timeRange,
+    Duration? timezone,
+    String? userId,
+    String? description,
+    List<String>? images,
+  }) =>
+      Booking(
+          bookingId: bookingId ?? this.bookingId,
+          firstName: firstName ?? this.firstName,
+          lastName: lastName ?? this.lastName,
+          email: email ?? this.email,
+          date: date ?? this.date,
+          timezone: timezone ?? this.timezone,
+          timeRange: timeRange ?? this.timeRange,
+          userId: userId ?? this.userId,
+          description: description ?? this.description,
+          images: images ?? this.images);
 }

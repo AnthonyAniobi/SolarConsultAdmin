@@ -1,6 +1,5 @@
 import 'package:admin/core/data/models/booking.dart';
 import 'package:admin/core/data/models/time_period_range.dart';
-import 'package:admin/core/extensions/datetime_extension.dart';
 import 'package:admin/features/bookings/presentation/widgets/time_selection_widget.dart';
 import 'package:admin/features/calendar/data/models/available_time.dart';
 import 'package:flutter/material.dart';
@@ -84,15 +83,8 @@ class SelectBookingHourScreen extends StatelessWidget {
   }
 
   Future<void> minutePicker(BuildContext context, int hour) async {
-    final currentHour = DateTime(
-      availableTime.date.year,
-      availableTime.date.month,
-      availableTime.date.day,
-      hour,
-    );
-    List<Booking> bookings = bookingRange
-        .where((bk) => bk.date.hourId == currentHour.hourId)
-        .toList();
+    List<Booking> bookings =
+        bookingRange.where((bk) => bk.timeRange.startHour == hour).toList();
     TimePeriodRange? result = await showDialog<TimePeriodRange>(
         context: context,
         builder: (context) {

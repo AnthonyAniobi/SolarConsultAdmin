@@ -1,14 +1,15 @@
 import 'package:admin/core/data/models/booking.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
-class BookingsDetailScreen extends StatefulWidget {
-  const BookingsDetailScreen({super.key, required this.booking});
+class BookingDetailScreen extends StatefulWidget {
+  const BookingDetailScreen({super.key, required this.booking});
   final Booking booking;
   @override
-  State<BookingsDetailScreen> createState() => _BookingsDetailScreenState();
+  State<BookingDetailScreen> createState() => _BookingDetailScreenState();
 }
 
-class _BookingsDetailScreenState extends State<BookingsDetailScreen> {
+class _BookingDetailScreenState extends State<BookingDetailScreen> {
   late Booking booking;
   @override
   void initState() {
@@ -22,21 +23,39 @@ class _BookingsDetailScreenState extends State<BookingsDetailScreen> {
       appBar: AppBar(
         title: const Text("Booking Detail"),
       ),
-      body: Column(
-        children: [
-          TitleDescription(
-            title: "Booking Id: ",
-            content: booking.bookingId,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TitleDescription(
+                title: "Booking Id: ",
+                content: booking.bookingId,
+              ),
+              TitleDescription(
+                title: "User Name: ",
+                content: "${booking.firstName} ${booking.lastName}",
+              ),
+              TitleDescription(
+                title: "Booking Id: ",
+                content: booking.bookingId,
+              ),
+              Wrap(
+                children: booking.images
+                    .map(
+                      (e) => Image.network(
+                        e,
+                        width: 40.w,
+                        height: 40.w,
+                        loadingBuilder: (context, child, event) =>
+                            const Center(child: CircularProgressIndicator()),
+                      ),
+                    )
+                    .toList(),
+              )
+            ],
           ),
-          TitleDescription(
-            title: "User Name: ",
-            content: "${booking.firstName} ${booking.lastName}",
-          ),
-          TitleDescription(
-            title: "Booking Id: ",
-            content: booking.bookingId,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -55,9 +74,17 @@ class TitleDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-        text: TextSpan(children: [
-      TextSpan(text: title, style: TextStyle(fontWeight: FontWeight.bold)),
-      TextSpan(text: content),
-    ]));
+      text: TextSpan(
+        children: [
+          TextSpan(text: title, style: TextStyle(fontWeight: FontWeight.w500)),
+          TextSpan(
+              text: content, style: TextStyle(fontWeight: FontWeight.w400)),
+        ],
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18.sp,
+        ),
+      ),
+    );
   }
 }

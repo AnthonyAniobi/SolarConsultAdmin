@@ -3,6 +3,7 @@ import 'package:admin/core/data/models/time_period_range.dart';
 import 'package:admin/core/extensions/datetime_extension.dart';
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/features/bookings/presentation/pages/add_bookings_screen.dart';
+import 'package:admin/features/bookings/presentation/pages/bookings_detail_screen.dart';
 import 'package:admin/features/bookings/presentation/pages/select_booking_day_screen.dart';
 import 'package:admin/features/bookings/presentation/pages/select_booking_hour_screen.dart';
 import 'package:admin/features/calendar/data/models/available_time.dart';
@@ -10,6 +11,7 @@ import 'package:admin/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
@@ -42,21 +44,30 @@ class BookingsScreen extends StatelessWidget {
                 itemCount: state.bookings.length,
                 itemBuilder: (context, index) {
                   final booking = state.bookings[index];
-                  return ListTile(
-                    title: Text(
-                        DateFormat('yyyy/MMM/dd  hh:mm').format(booking.date)),
-                    subtitle: Text(
-                      booking.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  return Card(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 2.w,
+                      vertical: 1.5.w,
                     ),
-                    trailing: IconButton(
-                        onPressed: () {
-                          context
-                              .read<BookingsBloc>()
-                              .add(DeleteBookingEvent(booking));
-                        },
-                        icon: const Icon(Icons.delete)),
+                    child: ListTile(
+                      onTap: () {
+                        bookingDetail(context, booking);
+                      },
+                      title: Text(DateFormat('yyyy/MMM/dd  hh:mm')
+                          .format(booking.date)),
+                      subtitle: Text(
+                        booking.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: IconButton(
+                          onPressed: () {
+                            context
+                                .read<BookingsBloc>()
+                                .add(DeleteBookingEvent(booking));
+                          },
+                          icon: const Icon(Icons.delete)),
+                    ),
                   );
                 });
           } else {
@@ -65,6 +76,15 @@ class BookingsScreen extends StatelessWidget {
             );
           }
         },
+      ),
+    );
+  }
+
+  void bookingDetail(BuildContext context, Booking booking) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingDetailScreen(booking: booking),
       ),
     );
   }

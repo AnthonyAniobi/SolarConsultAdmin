@@ -1,6 +1,13 @@
 import 'dart:typed_data';
+// ignore: depend_on_referenced_packages
+import 'package:admin/core/data/models/booking.dart';
+import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
+import 'package:collection/collection.dart';
+import 'package:admin/core/data/datasources/image_service.dart';
 import 'package:admin/core/data/models/time_period_range.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,7 +30,6 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TimePeriodRange? timePeriod;
   final List<Uint8List> images = [];
 
   @override
@@ -50,31 +56,97 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              _inputField(firstNameController, "First Name"),
-              _inputField(lastNameController, "Last Name"),
-              _inputField(emailController, "Email"),
-              _inputField(descriptionController, "Description", 4),
-              Wrap(
-                spacing: 2.w,
-                children: [
-                  ElevatedButton(
-                      onPressed: () async {},
-                      child: const Text("Add Time Period")),
-                  // ElevatedButton(
-                  //     onPressed: () {}, child: const Text("Add Ending Time")),
-                  ElevatedButton(
-                      onPressed: () async {}, child: const Text("Add Images")),
-                ],
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                _inputField(firstNameController, "First Name"),
+                _inputField(lastNameController, "Last Name"),
+                _inputField(emailController, "Email"),
+                _inputField(descriptionController, "Description", 4),
+                ElevatedButton(
+                  onPressed: () async {
+                    await getImage();
+                  },
+                  child: const Text("Add Images"),
+                ),
+                SizedBox(height: 2.h),
+                ElevatedButton(
+                  onPressed: () async {
+                    submit(context);
+                  },
+                  child: const Text("Create booking"),
+                ),
+                SizedBox(height: 2.h),
+                Wrap(
+                  spacing: 2.w,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  runSpacing: 2.w,
+                  children: images
+                      .mapIndexed(
+                        (index, mImg) => SizedBox(
+                          width: 30.w,
+                          height: 30.w,
+                          child: Stack(
+                            children: [
+                              Image.memory(
+                                mImg,
+                                width: 30.w,
+                                height: 30.w,
+                              ),
+                              Container(
+                                width: double.maxFinite,
+                                height: double.maxFinite,
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: InkWell(
+                                  onTap: () {
+                                    images.removeAt(index);
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> getImage() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    final Uint8List? byteImage = await ImageService.pickImage(context);
+    if (byteImage != null) {
+      setState(() {
+        images.add(byteImage);
+      });
+    }
   }
 
   Padding _inputField(TextEditingController controller, String hint,
@@ -98,24 +170,26 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
   }
 
   void submit(BuildContext context) {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState?.validate() ?? false) {
-      if (timePeriod != null) {
-        String uuid = const Uuid().v4();
+      String uuid = const Uuid().v4();
 
-        // Booking newBooking = Booking(
-        //   bookingId: uuid,
-        //   firstName: firstNameController.text,
-        //   lastName: lastNameController.text,
-        //   email: emailController.text,
-        //   timezone: DateTime.now().timeZoneOffset,
-        //   timeRange: timePeriod!,
-        //   endTime: dateTimeRange!.end,
-        //   userId: FirebaseAuth.instance.currentUser!.uid,
-        //   description: descriptionController.text,
-        //   images: images,
-        // );
-        // context.read<BookingsBloc>().add(CreateNewBookingEvent(newBooking));
-      }
+      Booking newBooking = Booking(
+        bookingId: uuid,
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        date: widget.date,
+        timezone: DateTime.now().timeZoneOffset,
+        timeRange: widget.timePeriod,
+        userId: FirebaseAuth.instance.currentUser!.uid,
+        description: descriptionController.text,
+        images: [],
+      );
+      context.read<BookingsBloc>().add(
+            CreateNewBookingEvent(newBooking, images),
+          );
+      Navigator.pop(context);
     }
   }
 }

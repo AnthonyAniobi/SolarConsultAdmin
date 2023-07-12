@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:admin/core/data/models/app_error.dart';
 import 'package:admin/core/data/models/booking.dart';
 import 'package:admin/core/domain/repositories/booking_datasource.dart';
@@ -11,9 +13,9 @@ class BookingRepositoryImpl extends BookingRepository {
 
   BookingRepositoryImpl(this.datasource);
   @override
-  AsyncErrorOr<void> addBooking(Booking booking) async {
+  AsyncErrorOr<void> addBooking(Booking booking, List<Uint8List> images) async {
     try {
-      await datasource.addBooking(booking);
+      await datasource.addBooking(booking, images);
       return const Right(null);
     } on FirebaseAuthException catch (e) {
       return Left(AppError(e.message ?? ""));

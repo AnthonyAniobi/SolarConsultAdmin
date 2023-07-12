@@ -58,21 +58,24 @@ class _TimeSelectionWidgetState extends State<TimeSelectionWidget> {
             children: [
               ElevatedButton(
                 onPressed: () {
+                  // print('object');
+                  // print(widget.bookings);
                   Navigator.pop(context);
                 },
                 child: const Text("Close"),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (selectedPeriod == null) {
-                    CustomAlertDialog.basic(
-                        context, "you have not selected a session");
-                    return;
-                  }
-                  Navigator.pop(context, selectedPeriod);
-                },
-                child: const Text("Done"),
-              ),
+              if (widget.bookings.length <= 1)
+                ElevatedButton(
+                  onPressed: () {
+                    if (selectedPeriod == null) {
+                      CustomAlertDialog.basic(
+                          context, "you have not selected a session");
+                      return;
+                    }
+                    Navigator.pop(context, selectedPeriod);
+                  },
+                  child: const Text("Book Time slot"),
+                ),
             ],
           ),
         ],
@@ -91,12 +94,17 @@ class _TimeSelectionWidgetState extends State<TimeSelectionWidget> {
       ),
       child: ListTile(
         onTap: () {
-          if (selected) {
-            selectedPeriod = null;
+          if (booked) {
+            CustomAlertDialog.basic(context,
+                "Time range is already booked, please select another time slot");
           } else {
-            selectedPeriod = timePeriod;
+            if (selected) {
+              selectedPeriod = null;
+            } else {
+              selectedPeriod = timePeriod;
+            }
+            setState(() {});
           }
-          setState(() {});
         },
         tileColor: selected
             ? Colors.greenAccent.shade200

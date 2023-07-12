@@ -16,7 +16,8 @@ class TimePeriodRange extends Equatable {
     finish = TimePeriod.fromMap(mapData[_finish]);
   }
 
-  int get hourDifference => finish.hour - begin.hour;
+  int get startHour => begin.hour;
+  int get startMin => begin.minute;
 
   Map toMap() => {
         _begin: begin.toMap(),

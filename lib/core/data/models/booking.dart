@@ -8,11 +8,10 @@ class Booking {
   final String _firstName = 'first_name';
   final String _lastName = 'last_name';
   final String _email = 'email';
-  final String _timezone = 'timezone';
   final String _userId = 'user_id';
   final String _description = 'description';
   final String _images = 'images';
-
+  final String _meetingLink = 'meeting_link';
   static const String orderByKey = "date";
   static const String bookingUserId = "user_id";
 
@@ -23,8 +22,7 @@ class Booking {
   late final String email;
   late final DateTime date;
   late final TimePeriodRange timeRange;
-  late final Duration timezone;
-
+  late final String meetingLink;
   late final String userId;
   late final String description;
   late final List<String> images;
@@ -35,7 +33,7 @@ class Booking {
     required this.lastName,
     required this.email,
     required this.date,
-    required this.timezone,
+    required this.meetingLink,
     required this.timeRange,
     required this.userId,
     required this.description,
@@ -48,7 +46,7 @@ class Booking {
     lastName = data[_lastName];
     email = data[_email];
     date = DateTime.fromMillisecondsSinceEpoch(data[_dateName]);
-    timezone = Duration(milliseconds: data[_timezone]);
+    meetingLink = data[_meetingLink] ?? "";
     timeRange = TimePeriodRange.fromMap(data[_timeRangeName]);
     userId = data[_userId];
     description = data[_description];
@@ -61,7 +59,7 @@ class Booking {
         _lastName: lastName,
         _email: email,
         _dateName: date.millisecondsSinceEpoch,
-        _timezone: timezone.inMilliseconds,
+        _meetingLink: meetingLink,
         _timeRangeName: timeRange.toMap(),
         _userId: userId,
         _description: description,
@@ -75,7 +73,7 @@ class Booking {
     String? email,
     DateTime? date,
     TimePeriodRange? timeRange,
-    Duration? timezone,
+    String? meetingLink,
     String? userId,
     String? description,
     List<String>? images,
@@ -86,7 +84,7 @@ class Booking {
           lastName: lastName ?? this.lastName,
           email: email ?? this.email,
           date: date ?? this.date,
-          timezone: timezone ?? this.timezone,
+          meetingLink: meetingLink ?? this.meetingLink,
           timeRange: timeRange ?? this.timeRange,
           userId: userId ?? this.userId,
           description: description ?? this.description,

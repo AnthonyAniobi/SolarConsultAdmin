@@ -1,7 +1,9 @@
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
+import 'package:admin/core/presentation/bloc/exchange_rates/exchange_rates_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
 import 'package:admin/features/bookings/presentation/pages/bookings_screen.dart';
 import 'package:admin/features/calendar/presentation/pages/calendar_screen.dart';
+import 'package:admin/features/exchange_rates/presentation/pages/exchange_rate_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,6 +104,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       addBooking(context);
                     },
                     child: const Text("All Bookings")),
+                ElevatedButton(
+                    onPressed: () {
+                      addExchangeRate(context);
+                    },
+                    child: const Text("Exchange Rate")),
               ],
             ),
             SizedBox(height: 2.h),
@@ -112,6 +119,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void questions(BuildContext context) {}
+  void addExchangeRate(BuildContext context) {
+    if (context.read<ExchangeRatesBloc>().state is ExchangeRatesInitial) {
+      context.read<ExchangeRatesBloc>().add(GetExchangeRates());
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ExchangeRateScreen(),
+      ),
+    );
+  }
 
   void calendarSchedule(BuildContext context) {
     Navigator.push(

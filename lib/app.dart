@@ -1,8 +1,13 @@
 import 'package:admin/core/data/datasources/booking_datasource.dart';
+import 'package:admin/core/data/datasources/exchange_rate_datasource.dart';
 import 'package:admin/core/data/repositories/booking_repository.dart';
+import 'package:admin/core/data/repositories/exchange_rate_repository.dart';
 import 'package:admin/core/domain/repositories/booking_datasource.dart';
 import 'package:admin/core/domain/repositories/booking_repository.dart';
+import 'package:admin/core/domain/repositories/exchange_rate_datasource.dart';
+import 'package:admin/core/domain/repositories/exchange_rate_repository.dart';
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
+import 'package:admin/core/presentation/bloc/exchange_rates/exchange_rates_bloc.dart';
 import 'package:admin/features/auth/data/datasources/auth_datasource.dart';
 import 'package:admin/features/auth/data/repositories/auth_repository.dart';
 import 'package:admin/features/auth/domain/repositories/auth_datasource.dart';
@@ -41,6 +46,9 @@ class MyApp extends StatelessWidget {
           RepositoryProvider<CalendarDatasource>(
             create: (context) => CalendarDatasourceImpl(),
           ),
+          RepositoryProvider<ExchangeRateDatasource>(
+            create: (context) => ExchageRateDatasourceImpl(),
+          ),
 
           // repositories
           RepositoryProvider<AuthRepository>(
@@ -51,6 +59,9 @@ class MyApp extends StatelessWidget {
           ),
           RepositoryProvider<CalendarRepository>(
             create: (context) => CalendarRepositoryImpl(context.read()),
+          ),
+          RepositoryProvider<ExchangeRateRepository>(
+            create: (context) => ExchangeRateRepositoryImpl(context.read()),
           ),
         ],
         child: MultiBlocProvider(
@@ -69,6 +80,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => CalendarBloc(context.read()),
+            ),
+            BlocProvider(
+              create: (context) => ExchangeRatesBloc(context.read()),
             ),
           ],
           child: MaterialApp(

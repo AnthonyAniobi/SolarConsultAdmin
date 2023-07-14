@@ -1,8 +1,12 @@
 import 'dart:typed_data';
 // ignore: depend_on_referenced_packages
-import 'package:admin/core/data/models/booking.dart';
-import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
+import 'package:admin/core/data/datasources/payment_service.dart';
+import 'package:admin/core/data/models/exchange_rates.dart';
+import 'package:admin/core/presentation/bloc/exchange_rates/exchange_rates_bloc.dart';
 import 'package:collection/collection.dart';
+import 'package:admin/core/data/models/booking.dart';
+import 'package:admin/core/extensions/booking_extension.dart';
+import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/core/data/datasources/image_service.dart';
 import 'package:admin/core/data/models/time_period_range.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -169,6 +173,24 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
     );
   }
 
+  Future<void> payMethod(BuildContext context) async {
+    double amount = context
+        .read<ExchangeRatesBloc>()
+        .state
+        .rates
+        .firstWhere((element) => element.currency == ExchangeRate.priceId)
+        .rate;
+    ExchangeRate exchangeRate =
+        context.read<ExchangeRatesBloc>().state.rates.first;
+    String name = "${firstNameController.text} ${lastNameController.text}";
+    await PaymentService.pay(
+        context: context,
+        amount: amount,
+        exchangeRate: exchangeRate,
+        customerEmail: emailController.text,
+        customerName: name);
+  }
+
   void submit(BuildContext context) {
     FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState?.validate() ?? false) {
@@ -180,14 +202,17 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
         lastName: lastNameController.text,
         email: emailController.text,
         date: widget.date,
-        timezone: DateTime.now().timeZoneOffset,
+        meetingLink: "",
         timeRange: widget.timePeriod,
         userId: FirebaseAuth.instance.currentUser!.uid,
         description: descriptionController.text,
         images: [],
       );
       context.read<BookingsBloc>().add(
-            CreateNewBookingEvent(newBooking, images),
+            CreateNewBookingEvent(
+              newBooking.toUtcTimezone,
+              images,
+            ),
           );
       Navigator.pop(context);
     }

@@ -21,11 +21,6 @@ class CalendarDatasourceImpl extends CalendarDatasource {
     } else {
       throw AppError('Snapshot is empty');
     }
-    // if (snapshot.exists) {
-    //   print(snapshot.value);
-    // } else {
-    //   print('No data available.');
-    // }
   }
 
   @override

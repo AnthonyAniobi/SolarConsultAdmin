@@ -3,4 +3,6 @@ import 'package:either_dart/either.dart';
 
 typedef AsyncErrorOr<T> = Future<Either<AppError, T>>;
 
-class AppConfig {}
+class AppConfig {
+  static late bool isTestMode;
+}

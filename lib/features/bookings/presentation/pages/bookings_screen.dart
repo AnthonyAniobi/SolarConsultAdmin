@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:admin/core/data/models/booking.dart';
 import 'package:admin/core/data/models/time_period_range.dart';
 import 'package:admin/core/extensions/datetime_extension.dart';
@@ -53,8 +55,8 @@ class BookingsScreen extends StatelessWidget {
                       onTap: () {
                         bookingDetail(context, booking);
                       },
-                      title: Text(DateFormat('yyyy/MMM/dd  hh:mm')
-                          .format(booking.date)),
+                      title: Text(
+                          "${DateFormat('yyyy/MMM/dd').format(booking.date)} -- ${booking.timeRange}"),
                       subtitle: Text(
                         booking.description,
                         maxLines: 2,
@@ -102,14 +104,12 @@ class BookingsScreen extends StatelessWidget {
       return;
     }
 
-    // ignore: use_build_context_synchronously
     final AvailableTime availableTime = context
         .read<CalendarBloc>()
         .state
         .availableTimes
         .firstWhere((avTime) => avTime.date.dayId == daySelected.dayId);
 
-    // ignore: use_build_context_synchronously
     final List<Booking> bookings = context
         .read<BookingsBloc>()
         .state
@@ -118,7 +118,6 @@ class BookingsScreen extends StatelessWidget {
         .toList();
 
     final TimePeriodRange? timePeriodRange =
-        // ignore: use_build_context_synchronously
         await Navigator.push<TimePeriodRange>(
       context,
       MaterialPageRoute(
@@ -132,8 +131,7 @@ class BookingsScreen extends StatelessWidget {
     if (timePeriodRange == null) {
       return;
     }
-    // ignore: use_build_context_synchronously
-    Navigator.push(
+    Booking? booking = await Navigator.push<Booking>(
       context,
       MaterialPageRoute(
         builder: (context) => AddBookingsScreen(
@@ -142,5 +140,8 @@ class BookingsScreen extends StatelessWidget {
         ),
       ),
     );
+    if (booking == null) {
+      return;
+    }
   }
 }

@@ -18,6 +18,7 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
   bool isEdit = false;
   TextEditingController currencyController = TextEditingController();
   TextEditingController rateController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   bool enable = true;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -29,6 +30,7 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
       isEdit = true;
       currencyController.text = widget.rate!.currency;
       rateController.text = widget.rate!.rate.toString();
+      nameController.text = widget.rate!.name.toString();
       enable = widget.rate!.active;
     }
   }
@@ -37,6 +39,7 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
   void dispose() {
     currencyController.dispose();
     rateController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -45,7 +48,9 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEdit
-            ? "Edit (${widget.rate!.currency}) rate"
+            ? (widget.rate!.isPrice
+                ? "Update Price"
+                : "Edit (${widget.rate!.currency}) rate")
             : "Add Exchange Rate"),
       ),
       bottomSheet: GestureDetector(
@@ -53,6 +58,7 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
           if (formKey.currentState?.validate() ?? false) {
             ExchangeRate rate = ExchangeRate(
               currency: currencyController.text,
+              name: nameController.text,
               rate: double.parse(rateController.text),
               active: enable,
             );
@@ -114,28 +120,51 @@ class _AddEditExchangeScreenState extends State<AddEditExchangeScreen> {
                 },
               ),
               SizedBox(height: 2.h),
-              Row(
-                children: [
-                  Text(
-                    "Enable Currency: ",
-                    style: TextStyle(
-                      fontSize: 17.sp,
-                      fontWeight: FontWeight.w500,
+              TextFormField(
+                controller: nameController,
+                decoration: CustomInputDecoration.basic('Name'),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return "name should not be empty";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 2.h),
+              if (priceItem)
+                Row(
+                  children: [
+                    Text(
+                      "Enable Currency: ",
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  Switch(
-                      value: enable,
-                      onChanged: (value) {
-                        setState(() {
-                          enable = value;
-                        });
-                      }),
-                ],
-              )
+                    Switch(
+                        value: enable,
+                        onChanged: (value) {
+                          setState(() {
+                            enable = value;
+                          });
+                        }),
+                  ],
+                )
             ],
           ),
         ),
       ),
     );
+  }
+
+  bool get priceItem {
+    bool? priceBool = widget.rate?.isPrice;
+    if (priceBool == null) {
+      return true;
+    } else if (priceBool) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

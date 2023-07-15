@@ -1,12 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 // ignore: depend_on_referenced_packages
 import 'package:admin/core/data/datasources/payment_service.dart';
 import 'package:admin/core/data/models/exchange_rates.dart';
+import 'package:admin/core/extensions/exchange_rate_list_extension.dart';
+import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/core/presentation/bloc/exchange_rates/exchange_rates_bloc.dart';
+import 'package:admin/features/bookings/presentation/pages/payment_confirmation_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:admin/core/data/models/booking.dart';
-import 'package:admin/core/extensions/booking_extension.dart';
-import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/core/data/datasources/image_service.dart';
 import 'package:admin/core/data/models/time_period_range.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -173,48 +176,53 @@ class _AddBookingsScreenState extends State<AddBookingsScreen> {
     );
   }
 
-  Future<void> payMethod(BuildContext context) async {
-    double amount = context
-        .read<ExchangeRatesBloc>()
-        .state
-        .rates
-        .firstWhere((element) => element.currency == ExchangeRate.priceId)
-        .rate;
-    ExchangeRate exchangeRate =
-        context.read<ExchangeRatesBloc>().state.rates.first;
-    String name = "${firstNameController.text} ${lastNameController.text}";
-    await PaymentService.pay(
-        context: context,
-        amount: amount,
-        exchangeRate: exchangeRate,
-        customerEmail: emailController.text,
-        customerName: name);
-  }
-
-  void submit(BuildContext context) {
+  Future submit(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState?.validate() ?? false) {
       String uuid = const Uuid().v4();
 
-      Booking newBooking = Booking(
-        bookingId: uuid,
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        email: emailController.text,
-        date: widget.date,
-        meetingLink: "",
-        timeRange: widget.timePeriod,
-        userId: FirebaseAuth.instance.currentUser!.uid,
-        description: descriptionController.text,
-        images: [],
+      if (context.read<ExchangeRatesBloc>().state is ExchangeRatesInitial) {
+        context.read<ExchangeRatesBloc>().add(GetExchangeRates());
+      }
+      ExchangeRate? exchangeRate = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const PaymentConfirmationScreen(),
+        ),
       );
-      context.read<BookingsBloc>().add(
-            CreateNewBookingEvent(
-              newBooking.toUtcTimezone,
-              images,
-            ),
-          );
-      Navigator.pop(context);
+
+      if (exchangeRate != null) {
+        Booking newBooking = Booking(
+          bookingId: uuid,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          email: emailController.text,
+          date: widget.date,
+          meetingLink: "",
+          timeRange: widget.timePeriod,
+          userId: FirebaseAuth.instance.currentUser!.uid,
+          description: descriptionController.text,
+          images: [],
+        );
+
+        /// make payment here;
+        double amount = exchangeRate.rate *
+            context.read<ExchangeRatesBloc>().state.rates.priceRate;
+        String customerName = "${newBooking.firstName} ${newBooking.lastName}";
+        bool paymentMade = await PaymentService.pay(
+          context: context,
+          amount: amount,
+          exchangeRate: exchangeRate,
+          customerEmail: newBooking.email,
+          customerName: customerName,
+        );
+        if (paymentMade) {
+          context.read<BookingsBloc>().add(
+                CreateNewBookingEvent(newBooking, images),
+              );
+
+          Navigator.pop(context, newBooking);
+        }
+      }
     }
   }
 }

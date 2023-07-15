@@ -1,6 +1,7 @@
 import 'package:admin/core/presentation/bloc/bookings/bookings_bloc.dart';
 import 'package:admin/core/presentation/bloc/exchange_rates/exchange_rates_bloc.dart';
 import 'package:admin/features/auth/presentation/pages/login_screen.dart';
+import 'package:admin/features/bookings/presentation/pages/bookings_detail_screen.dart';
 import 'package:admin/features/bookings/presentation/pages/bookings_screen.dart';
 import 'package:admin/features/calendar/presentation/pages/calendar_screen.dart';
 import 'package:admin/features/exchange_rates/presentation/pages/exchange_rate_screen.dart';
@@ -60,21 +61,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: state.bookings.length,
                       itemBuilder: (context, index) {
                         final booking = state.bookings[index];
-                        return ListTile(
-                          title: Text(DateFormat('yyyy/MMM/dd  hh:mm')
-                              .format(booking.date)),
-                          subtitle: Text(
-                            booking.description,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 2.w),
+                          child: ListTile(
+                            title: Text(
+                                "${DateFormat('yyyy/MMM/dd').format(booking.date)} | ${booking.timeRange}"),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BookingDetailScreen(booking: booking),
+                                ),
+                              );
+                            },
+                            subtitle: Text(
+                              booking.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          trailing: IconButton(
-                              onPressed: () {
-                                context
-                                    .read<BookingsBloc>()
-                                    .add(DeleteBookingEvent(booking));
-                              },
-                              icon: const Icon(Icons.delete)),
                         );
                       });
                 } else {

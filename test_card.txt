@@ -1,0 +1,6 @@
+| Type	                       |  Card number	  | CVV | PIN  | Expiry | OTP   |
++-------------------------------+------------------+-----+------+--------+-------+
+| MasterCard PIN authentication  | 5531886652142950 | 564 | 3310 | 09/32  | 12345 |
+| Mastercard PIN authentication 2| 5399838383838381 | 470 | 3310 | 10/31  | 12345 |
+| MasterCard 3DS authentication  | 5438898014560229 | 564 | 3310 | 10/31  | 12345 |
+| Visa Card 3DS authentication   | 4187427415564246 | 828 | 3310 | 09/32  | 12345 |

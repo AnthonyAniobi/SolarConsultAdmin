@@ -11,7 +11,9 @@ extension BookingExtension on Booking {
     final booking = copy(
         timeRange: TimePeriodRange(
             begin: TimePeriod(
-                hour: localBeginTime.hour, minute: localBeginTime.minute),
+              hour: localBeginTime.hour,
+              minute: localBeginTime.minute,
+            ),
             finish: TimePeriod(
               hour: localEndTime.hour,
               minute: localEndTime.minute,

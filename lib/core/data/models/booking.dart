@@ -1,4 +1,5 @@
 import 'package:admin/core/data/models/time_period_range.dart';
+import 'package:admin/core/extensions/booking_extension.dart';
 
 class Booking {
   // items
@@ -41,30 +42,49 @@ class Booking {
   });
 
   Booking.fromMap(Map data) {
-    bookingId = data[_bookingid];
-    firstName = data[_firstName];
-    lastName = data[_lastName];
-    email = data[_email];
-    date = DateTime.fromMillisecondsSinceEpoch(data[_dateName]);
-    meetingLink = data[_meetingLink] ?? "";
-    timeRange = TimePeriodRange.fromMap(data[_timeRangeName]);
-    userId = data[_userId];
-    description = data[_description];
-    images = List<String>.from(data[_images]);
+    // get information in server
+    Booking serverBooking = Booking(
+      bookingId: data[_bookingid],
+      firstName: data[_firstName],
+      lastName: data[_lastName],
+      email: data[_email],
+      date: DateTime.fromMillisecondsSinceEpoch(data[_dateName]),
+      meetingLink: data[_meetingLink] ?? "",
+      timeRange: TimePeriodRange.fromMap(data[_timeRangeName]),
+      userId: data[_userId],
+      description: data[_description],
+      images: List<String>.from(data[_images]),
+    );
+    // convert to local time
+    Booking localBooking = serverBooking.toLocalTimezone;
+    // parse information to current booking
+    bookingId = localBooking.bookingId;
+    firstName = localBooking.firstName;
+    lastName = localBooking.lastName;
+    email = localBooking.email;
+    date = localBooking.date;
+    meetingLink = localBooking.meetingLink;
+    timeRange = localBooking.timeRange;
+    userId = localBooking.userId;
+    description = localBooking.description;
+    images = localBooking.images;
   }
 
-  Map<String, dynamic> toMap() => {
-        _bookingid: bookingId,
-        _firstName: firstName,
-        _lastName: lastName,
-        _email: email,
-        _dateName: date.millisecondsSinceEpoch,
-        _meetingLink: meetingLink,
-        _timeRangeName: timeRange.toMap(),
-        _userId: userId,
-        _description: description,
-        _images: images,
-      };
+  Map<String, dynamic> toMap() {
+    Booking utcBooking = toUtcTimezone;
+    return {
+      _bookingid: utcBooking.bookingId,
+      _firstName: utcBooking.firstName,
+      _lastName: utcBooking.lastName,
+      _email: utcBooking.email,
+      _dateName: utcBooking.date.millisecondsSinceEpoch,
+      _meetingLink: utcBooking.meetingLink,
+      _timeRangeName: utcBooking.timeRange.toMap(),
+      _userId: utcBooking.userId,
+      _description: utcBooking.description,
+      _images: utcBooking.images,
+    };
+  }
 
   Booking copy({
     String? bookingId,

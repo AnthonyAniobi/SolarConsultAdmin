@@ -1,4 +1,5 @@
 import 'package:admin/core/extensions/datetime_extension.dart';
+import 'package:admin/core/extensions/list_int_extension.dart';
 
 class AvailableTime {
   final String _date = "date_time";
@@ -10,12 +11,13 @@ class AvailableTime {
   AvailableTime({required this.date, required this.hours});
 
   AvailableTime.fromMap(Map data) {
-    date = DateTime.fromMillisecondsSinceEpoch(data[_date]).fromUtc;
-    hours = data[_hours].map<int>((h) => h as int).toList();
+    List<int> allHours = data[_hours].map<int>((h) => h as int).toList();
+    date = DateTime.fromMillisecondsSinceEpoch(data[_date]).toLocalTime;
+    hours = allHours.toLocalTime;
   }
 
   Map<String, dynamic> toMap() => {
-        _date: date.millisecondsSinceEpoch,
-        _hours: hours,
+        _date: date.toUtc().millisecondsSinceEpoch,
+        _hours: hours.toUTCTime, // convert to utc before sending to online
       };
 }
